@@ -17,6 +17,7 @@ import {
   editContainer,
   deleteContainer,
 } from './controllers/containerController'
+import { addBatch, editBatch, deleteBatch } from './controllers/batchController'
 import { firebaseAuth } from './middleware/authMiddleware'
 
 const app = express()
@@ -40,5 +41,10 @@ app.delete('/winery/:wineryId', deleteWinery)
 app.post('/container', firebaseAuth, addContainer)
 app.patch('/container/:containerId', editContainer)
 app.delete('/container/:containerId', deleteContainer)
+
+//--------------BATCH ROUTES-------------//
+app.post('/batch', firebaseAuth, addBatch)
+app.patch('/batch/:batchId', editBatch)
+app.delete('/batch/:batchId', deleteBatch)
 
 exports.api = functions.region('europe-west1').https.onRequest(app)
