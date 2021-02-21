@@ -17,6 +17,7 @@ import {
   editContainer,
   deleteContainer,
 } from './controllers/containerController'
+import { addTask, editTask, deleteTask } from './controllers/taskController'
 import { addBatch, editBatch, deleteBatch } from './controllers/batchController'
 import { firebaseAuth } from './middleware/authMiddleware'
 
@@ -46,5 +47,10 @@ app.delete('/container/:containerId', deleteContainer)
 app.post('/batch', firebaseAuth, addBatch)
 app.patch('/batch/:batchId', editBatch)
 app.delete('/batch/:batchId', deleteBatch)
+
+//--------------TASK ROUTES-------------//
+app.post('/task', firebaseAuth, addTask)
+app.patch('/task/:taskId', editTask)
+app.delete('/task/:taskId', deleteTask)
 
 exports.api = functions.region('europe-west1').https.onRequest(app)
