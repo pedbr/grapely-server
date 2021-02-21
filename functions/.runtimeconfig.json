@@ -1,0 +1,11 @@
+{
+  "project": {
+    "id": "winery-app-b819d"
+  },
+  "private": {
+    "key": "-----BEGIN PRIVATE KEY-----\\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDqtY4PpSxv8/Gx\\nVIkXH9l1fzB/Qf1202kdiwBbf5dOySh2hZN/dEp5r1tPHRr6UGOZnF0yg5z6rOVy\\nu1c5ppzvChWeHM4A9vcCuVdUpmfbtZco3et+GgbUKpEHf2c9Tr2OpgXfQN+HeW4g\\ny0ZwCdVOM6/C6TDUWX8A+5jQd+lFhGZYVRID1Z2lO2/bHII5mpgsM6OKrtfctxa+\\nwwaJOKTUX1RD6DHyO4FCPaPgPXD95FLxa8Bc6FhG0+tvPqKXHp1HGF8FIrrqqxKr\\npoDGza+E+P5POY2rbk9djZDsQ5RC76z1TQyp2l363bKGTOQD9wn5CFXwoEbogAvc\\n5Y0fylNFAgMBAAECggEABOu1hMJzwg0dPhiFn0R9rKbz/1cE117rT0FAyqpMI8y3\\n2nRGeV+YyCBTC7+SdzkEPY43rf1wZxkE3njrBTxnAeP2PBBiiUakOxxjplSuzL5r\\n4uF0NHqbNguGat/S7EggVUNJ0Dpt9UsoceuRGHw8Sp1uy+lTqsANl5muxIAfFeP8\\nchCi8Uz45U4KoJIHagtLwMpXVEu0iolW28RRQM2zzN3wJDWiJuO5TGxgd3iY+D/n\\nDRHG0nwnOejNwW5CZPu26Yv3AFBKjctn6ajH7/UvfjztnIjjFMjtQoD+clS6YuYE\\neiEK4nyJsX1iCz2pXZ8yIGgrn/JNm44wVMbdZuBw6QKBgQD1pBh8KWrBdJTiA5/N\\n9TB9jLHPfUmlq6L8f53EB0jKDnbsl1iNqV012DN+g8S+w01D0zQS1OqExof744Lp\\nvsTbmCa+/amihETqs2HNP+NWaWwXJ1TJStbb1pYU3RdylFimzkncV0ZoZz4RQCzA\\nz6HSupRwZfytvhgv7rOFX5OcawKBgQD0m3DwakUv+zBxCOzeu+XbQlS3nQoeBj9w\\n3UvS4Yaou+U8a8O+RYmr5i/9JR+N7Otnn715UEmGWqeqkJMjL+ZCYUW9CvVkxixz\\nye6ypOO+MvKpBqLh4GdfgtILRtlF5aolDcNHg4AtGBS5YQKWHAHK4ZyCBr1kpoft\\nQ622MSa7DwKBgE/o+i4qKxiUHHsKQsp1oTi2tIGTeIn0tCkAOwqyc/OHkRiWg7BS\\nEIibtOTLaQ3F6zTNWHtn2IMpMsO217fC37ewX6pySuUbsm/Hu2FSD1rlIMzHdsWl\\nGxCZVmmjIyWbLNvW8CBGJBmCvKZQAj8XTMWI/REznGfJF4VAWhZhaVvRAoGASTim\\nrDEDmQNWUt/bGCmi+ul2NqiZuLciEoUMB4pfJu9oBZg0tiZWudBkGSEduvxq01As\\nBb6U49ULT7GLegMCqGg52gcHwizYbajK/UsCqZLStOo5o+fqydp9Scbhj1zae9EM\\n3cFtgxIsUfnKLmkf2D2E/h9KXnDDS7DwtRMtht0CgYEAp/+V7rSOe4j2h1e/NK5T\\ney56p8V73PEB5uutE1j29E1lAUiZ1dynJcEnadKPXZLEmS5cAK970uQ7uc48nkpw\\np5HOLOXHPAIH6EQRv+8/y9AGOq7FBbpnqG/OGkBCoxNkVgERbD1YsMz4KoxGIrON\\nVYxrpiC/dh/0h+ML1d9cG2U=\\n-----END PRIVATE KEY-----\\n"
+  },
+  "client": {
+    "email": "firebase-adminsdk-fbdeg@winery-app-b819d.iam.gserviceaccount.com"
+  }
+}
