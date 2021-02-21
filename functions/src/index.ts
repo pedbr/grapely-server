@@ -6,7 +6,7 @@ import {
   editWinery,
   deleteWinery,
 } from './controllers/wineryController'
-import { getUserWithWineries } from './controllers/userController'
+import { getUser, getUserWithWineries } from './controllers/userController'
 import { signUpUser, loginUser } from './controllers/authController'
 import { firebaseAuth } from './middleware/authMiddleware'
 
@@ -17,6 +17,7 @@ app.post('/signup', signUpUser)
 app.post('/login', loginUser)
 
 //--------------USER ROUTES-------------//
+app.get('/user', firebaseAuth, getUser)
 app.get('/userWithWineries', firebaseAuth, getUserWithWineries)
 
 //--------------WINERY ROUTES-------------//

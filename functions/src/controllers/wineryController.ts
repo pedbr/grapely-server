@@ -1,20 +1,13 @@
 import { Response } from 'express'
 import { db } from '../config/firebase'
-
-type WineryType = {
-  id: string
-  name: string
-  location: string
-  ownerId: string
-  createdAt: string
-}
+import { Winery } from '../models/wineryModel'
 
 type RequestUser = {
   uid: string
 }
 
 type Request = {
-  body: WineryType
+  body: Winery
   user?: RequestUser
   params: { wineryId: string }
 }
@@ -22,7 +15,7 @@ type Request = {
 //-----------GET ALL----------//
 const getAllWineries = async (req: Request, res: Response) => {
   try {
-    const allWineries: WineryType[] = []
+    const allWineries: Winery[] = []
     const querySnapshot = await db
       .collection('wineries')
       .where('ownerId', '==', req.user?.uid)
@@ -39,13 +32,17 @@ const getAllWineries = async (req: Request, res: Response) => {
 //-----------CREATE NEW----------//
 const addWinery = async (req: Request, res: Response) => {
   const { name, location } = req.body
+  if (!req.user)
+    return res
+      .status(403)
+      .json({ general: 'Authentication error, please try again' })
   try {
     const winery = db.collection('wineries').doc()
-    const wineryObject = {
+    const wineryObject: Winery = {
       id: winery.id,
       name,
       location,
-      ownerId: req.user?.uid,
+      ownerId: req.user.uid,
       createdAt: new Date().toISOString(),
     }
 
@@ -59,6 +56,7 @@ const addWinery = async (req: Request, res: Response) => {
   } catch (error) {
     res.status(500).json(error.message)
   }
+  return
 }
 
 //-----------EDIT----------//

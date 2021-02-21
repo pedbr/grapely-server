@@ -1,16 +1,15 @@
-import { Container } from './containerModel'
 import { Note } from './noteModel'
 import { Task } from './taskModel'
 
-interface Winery {
+interface Container {
   id: string
-  location: string
+  capacity: number
+  type: string
   name: string
-  ownerId: string
+  wineryId: string
   createdAt: string
-  containers?: Container[]
   tasks?: Task[]
   notes?: Note[]
 }
 
-export { Winery }
+export { Container }

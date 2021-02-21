@@ -1,11 +1,21 @@
 import { Response } from 'express'
 import * as firebase from 'firebase'
 import { db, firebaseConfig } from '../config/firebase'
-import { UserType } from '../models/userModel'
+import { User } from '../models/userModel'
 import { isEmpty, isEmail } from '../utils/helpers'
 
+interface AuthUser {
+  firstName: string
+  lastName: string
+  email: string
+  password: string
+  confirmPassword: string
+  company?: string
+  role?: string
+}
+
 type Request = {
-  body: UserType
+  body: AuthUser
   params: { wineryId: string }
 }
 
@@ -14,6 +24,7 @@ type Errors = {
   password?: string
   confirmPassword?: string
   firstName?: string
+  lastName?: string
 }
 
 firebase.default.initializeApp(firebaseConfig)
@@ -22,48 +33,69 @@ firebase.default.initializeApp(firebaseConfig)
 const signUpUser = async (req: Request, res: Response) => {
   let token: string | undefined
   let userId: string | undefined
-  const newUser = {
+  const userCredentials: AuthUser = {
     email: req.body.email,
     password: req.body.password,
     confirmPassword: req.body.confirmPassword,
     firstName: req.body.firstName,
+    lastName: req.body.lastName,
+    company: req.body.company,
+    role: req.body.role,
   }
-
+  console.log(userCredentials)
+  const {
+    email,
+    password,
+    confirmPassword,
+    firstName,
+    lastName,
+    company,
+    role,
+  } = userCredentials
   //-----------VALIDATION-------------//
   let errors: Errors = {}
 
-  if (isEmpty(newUser.email)) {
+  if (isEmpty(email)) {
     errors.email = 'Must not be empty.'
-  } else if (!isEmail(newUser.email)) {
+  } else if (!isEmail(email)) {
     errors.email = 'Must be a valid email address.'
   }
 
-  if (isEmpty(newUser.password)) errors.password = 'Must not be empty'
+  if (isEmpty(password)) errors.password = 'Must not be empty'
 
-  if (newUser.password !== newUser.confirmPassword)
+  if (password !== confirmPassword)
     errors.confirmPassword = 'Password must match'
 
-  if (isEmpty(newUser.firstName)) errors.firstName = 'Must not be empty'
+  if (isEmpty(firstName)) errors.firstName = 'Must not be empty'
+  if (isEmpty(lastName)) errors.lastName = 'Must not be empty'
 
   if (Object.keys(errors).length > 0) return res.status(400).json(errors)
   //----------------------------------//
 
   firebase.default
     .auth()
-    .createUserWithEmailAndPassword(newUser.email, newUser.password)
+    .createUserWithEmailAndPassword(email, password)
     .then((data) => {
       userId = data?.user?.uid
       return data?.user?.getIdToken()
     })
-    .then((idToken) => {
+    .then((idToken): any => {
+      if (!userId)
+        return res
+          .status(403)
+          .json({ general: 'Authentication error, please try again' })
+
       token = idToken
-      const userCredentials = {
-        firstName: newUser.firstName,
-        email: newUser.email,
+      const newUser: User = {
+        firstName,
+        lastName,
+        email,
         createdAt: new Date().toISOString(),
         userId,
+        company,
+        role,
       }
-      return db.doc(`/users/${userId}`).set(userCredentials)
+      return db.doc(`/users/${userId}`).set(newUser)
     })
     .then(() => {
       res.status(201).json({ token })
