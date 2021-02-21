@@ -2,6 +2,7 @@ import { Response } from 'express'
 import { db } from '../config/firebase'
 
 type WineryType = {
+  id: string
   name: string
   location: string
   ownerId: string
@@ -24,10 +25,10 @@ const getAllWineries = async (req: Request, res: Response) => {
     const allWineries: WineryType[] = []
     const querySnapshot = await db
       .collection('wineries')
-      .orderBy('createdAt', 'desc')
+      .where('ownerId', '==', req.user?.uid)
       .get()
     querySnapshot.forEach((doc: any) => {
-      doc.data().ownerId === req.user?.uid && allWineries.push(doc.data())
+      allWineries.push(doc.data())
     })
     return res.status(200).json(allWineries)
   } catch (error) {

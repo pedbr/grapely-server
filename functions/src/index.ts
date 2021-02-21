@@ -6,7 +6,8 @@ import {
   editWinery,
   deleteWinery,
 } from './controllers/wineryController'
-import { signUpUser, loginUser } from './controllers/userController'
+import { getUserWithWineries } from './controllers/userController'
+import { signUpUser, loginUser } from './controllers/authController'
 import { firebaseAuth } from './middleware/authMiddleware'
 
 const app = express()
@@ -14,6 +15,9 @@ const app = express()
 //--------------AUTH ROUTES-------------//
 app.post('/signup', signUpUser)
 app.post('/login', loginUser)
+
+//--------------AUTH ROUTES-------------//
+app.get('/userWithWineries', firebaseAuth, getUserWithWineries)
 
 //--------------WINERY ROUTES-------------//
 app.get('/wineries', firebaseAuth, getAllWineries)
