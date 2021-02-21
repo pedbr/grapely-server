@@ -1,5 +1,6 @@
 import * as functions from 'firebase-functions'
 import * as express from 'express'
+import { signUpUser, loginUser } from './controllers/authController'
 import {
   addWinery,
   getAllWineries,
@@ -11,7 +12,11 @@ import {
   getUser,
   getUserWithWineries,
 } from './controllers/userController'
-import { signUpUser, loginUser } from './controllers/authController'
+import {
+  addContainer,
+  editContainer,
+  deleteContainer,
+} from './controllers/containerController'
 import { firebaseAuth } from './middleware/authMiddleware'
 
 const app = express()
@@ -30,5 +35,10 @@ app.get('/wineries', firebaseAuth, getAllWineries)
 app.post('/winery', firebaseAuth, addWinery)
 app.patch('/winery/:wineryId', editWinery)
 app.delete('/winery/:wineryId', deleteWinery)
+
+//--------------CONTAINER ROUTES-------------//
+app.post('/container', firebaseAuth, addContainer)
+app.patch('/container/:containerId', editContainer)
+app.delete('/container/:containerId', deleteContainer)
 
 exports.api = functions.region('europe-west1').https.onRequest(app)
