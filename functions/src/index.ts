@@ -16,7 +16,7 @@ const app = express()
 app.post('/signup', signUpUser)
 app.post('/login', loginUser)
 
-//--------------AUTH ROUTES-------------//
+//--------------USER ROUTES-------------//
 app.get('/userWithWineries', firebaseAuth, getUserWithWineries)
 
 //--------------WINERY ROUTES-------------//

@@ -17,7 +17,6 @@ const firebaseAuth = (req: any, res: any, next: any) => {
     .verifyIdToken(idToken)
     .then((decodedToken) => {
       req.user = decodedToken
-      console.log(decodedToken)
       return db
         .collection('users')
         .where('userId', '==', req.user.uid)
