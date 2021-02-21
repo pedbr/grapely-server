@@ -1,12 +1,12 @@
 interface Note {
   id: string
-  authorUser: string
+  authorUserId: string
   createdAt: string
   body: string
   wineryId?: string
   containerId?: string
   batchId?: string
-  taskId: string
+  taskId?: string
 }
 
 export { Note }

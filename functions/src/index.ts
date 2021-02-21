@@ -17,8 +17,9 @@ import {
   editContainer,
   deleteContainer,
 } from './controllers/containerController'
-import { addTask, editTask, deleteTask } from './controllers/taskController'
 import { addBatch, editBatch, deleteBatch } from './controllers/batchController'
+import { addTask, editTask, deleteTask } from './controllers/taskController'
+import { addNote, editNote, deleteNote } from './controllers/noteController'
 import { firebaseAuth } from './middleware/authMiddleware'
 
 const app = express()
@@ -52,5 +53,10 @@ app.delete('/batch/:batchId', deleteBatch)
 app.post('/task', firebaseAuth, addTask)
 app.patch('/task/:taskId', editTask)
 app.delete('/task/:taskId', deleteTask)
+
+//--------------NOTE ROUTES-------------//
+app.post('/note', firebaseAuth, addNote)
+app.patch('/note/:noteId', editNote)
+app.delete('/note/:noteId', deleteNote)
 
 exports.api = functions.region('europe-west1').https.onRequest(app)
