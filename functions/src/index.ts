@@ -6,7 +6,11 @@ import {
   editWinery,
   deleteWinery,
 } from './controllers/wineryController'
-import { getUser, getUserWithWineries } from './controllers/userController'
+import {
+  editUser,
+  getUser,
+  getUserWithWineries,
+} from './controllers/userController'
 import { signUpUser, loginUser } from './controllers/authController'
 import { firebaseAuth } from './middleware/authMiddleware'
 
@@ -18,6 +22,7 @@ app.post('/login', loginUser)
 
 //--------------USER ROUTES-------------//
 app.get('/user', firebaseAuth, getUser)
+app.patch('/user', firebaseAuth, editUser)
 app.get('/userWithWineries', firebaseAuth, getUserWithWineries)
 
 //--------------WINERY ROUTES-------------//
