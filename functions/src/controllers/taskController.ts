@@ -9,7 +9,84 @@ type RequestUser = {
 type Request = {
   body: Task
   user?: RequestUser
-  params: { taskId: string }
+  params: {
+    taskId: string
+    wineryId: string
+    containerId: string
+    batchId: string
+  }
+}
+
+//-----------GET MY----------//
+const getMyTasks = async (req: Request, res: Response) => {
+  if (!req.user)
+    return res
+      .status(403)
+      .json({ general: 'Authentication error, please try again' })
+  try {
+    const myTasks: Task[] = []
+    const querySnapshot = await db
+      .collection('tasks')
+      .where('authorUserId', '==', req.user?.uid)
+      .get()
+    querySnapshot.forEach((doc: any) => {
+      myTasks.push(doc.data())
+    })
+    return res.status(200).json(myTasks)
+  } catch (error) {
+    return res.status(500).json(error.message)
+  }
+}
+
+//-----------GET BY WINERY ID----------//
+const getWineryTasks = async (req: Request, res: Response) => {
+  try {
+    const wineryTasks: Task[] = []
+    const querySnapshot = await db
+      .collection('tasks')
+      .where('wineryId', '==', req.params.wineryId)
+      .get()
+    querySnapshot.forEach((doc: any) => {
+      wineryTasks.push(doc.data())
+    })
+    return res.status(200).json(wineryTasks)
+  } catch (error) {
+    return res.status(500).json(error.message)
+  }
+}
+
+//-----------GET BY WINERY ID----------//
+const getContainerTasks = async (req: Request, res: Response) => {
+  try {
+    const containerTasks: Task[] = []
+    const querySnapshot = await db
+      .collection('tasks')
+      .where('containerId', '==', req.params.containerId)
+      .get()
+    querySnapshot.forEach((doc: any) => {
+      containerTasks.push(doc.data())
+    })
+    return res.status(200).json(containerTasks)
+  } catch (error) {
+    return res.status(500).json(error.message)
+  }
+}
+
+//-----------GET BY BATCH ID----------//
+const getBatchTasks = async (req: Request, res: Response) => {
+  try {
+    const batchTasks: Task[] = []
+    const querySnapshot = await db
+      .collection('tasks')
+      .where('batchId', '==', req.params.batchId)
+      .get()
+    querySnapshot.forEach((doc: any) => {
+      batchTasks.push(doc.data())
+    })
+    return res.status(200).json(batchTasks)
+  } catch (error) {
+    return res.status(500).json(error.message)
+  }
 }
 
 //-----------CREATE NEW----------//
@@ -127,4 +204,12 @@ const deleteTask = async (req: Request, res: Response) => {
   }
 }
 
-export { addTask, editTask, deleteTask }
+export {
+  getMyTasks,
+  getWineryTasks,
+  getContainerTasks,
+  getBatchTasks,
+  addTask,
+  editTask,
+  deleteTask,
+}

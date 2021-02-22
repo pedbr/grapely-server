@@ -9,7 +9,27 @@ type RequestUser = {
 type Request = {
   body: Container
   user?: RequestUser
-  params: { containerId: string }
+  params: {
+    containerId: string
+    wineryId: string
+  }
+}
+
+//-----------GET BY WINERY ID----------//
+const getWineryContainers = async (req: Request, res: Response) => {
+  try {
+    const wineryContainers: Container[] = []
+    const querySnapshot = await db
+      .collection('containers')
+      .where('wineryId', '==', req.params.wineryId)
+      .get()
+    querySnapshot.forEach((doc: any) => {
+      wineryContainers.push(doc.data())
+    })
+    return res.status(200).json(wineryContainers)
+  } catch (error) {
+    return res.status(500).json(error.message)
+  }
 }
 
 //-----------CREATE NEW----------//
@@ -103,4 +123,4 @@ const deleteContainer = async (req: Request, res: Response) => {
   }
 }
 
-export { addContainer, editContainer, deleteContainer }
+export { getWineryContainers, addContainer, editContainer, deleteContainer }

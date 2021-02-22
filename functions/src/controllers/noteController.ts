@@ -9,7 +9,81 @@ type RequestUser = {
 type Request = {
   body: Note
   user?: RequestUser
-  params: { noteId: string }
+  params: {
+    noteId: string
+    wineryId: string
+    containerId: string
+    batchId: string
+    taskId: string
+  }
+}
+
+//-----------GET BY WINERY ID----------//
+const getWineryNotes = async (req: Request, res: Response) => {
+  try {
+    const wineryNotes: Note[] = []
+    const querySnapshot = await db
+      .collection('notes')
+      .where('wineryId', '==', req.params.wineryId)
+      .get()
+    querySnapshot.forEach((doc: any) => {
+      wineryNotes.push(doc.data())
+    })
+    return res.status(200).json(wineryNotes)
+  } catch (error) {
+    return res.status(500).json(error.message)
+  }
+}
+
+//-----------GET BY CONTAINER ID----------//
+const getContainerNotes = async (req: Request, res: Response) => {
+  try {
+    const containerNotes: Note[] = []
+    const querySnapshot = await db
+      .collection('notes')
+      .where('containerId', '==', req.params.containerId)
+      .get()
+    querySnapshot.forEach((doc: any) => {
+      containerNotes.push(doc.data())
+    })
+    return res.status(200).json(containerNotes)
+  } catch (error) {
+    return res.status(500).json(error.message)
+  }
+}
+
+//-----------GET BY BATCH ID----------//
+const getBatchNotes = async (req: Request, res: Response) => {
+  try {
+    const batchNotes: Note[] = []
+    const querySnapshot = await db
+      .collection('notes')
+      .where('batchId', '==', req.params.batchId)
+      .get()
+    querySnapshot.forEach((doc: any) => {
+      batchNotes.push(doc.data())
+    })
+    return res.status(200).json(batchNotes)
+  } catch (error) {
+    return res.status(500).json(error.message)
+  }
+}
+
+//-----------GET BY TASK ID----------//
+const getTaskNotes = async (req: Request, res: Response) => {
+  try {
+    const taskNotes: Note[] = []
+    const querySnapshot = await db
+      .collection('notes')
+      .where('taskId', '==', req.params.taskId)
+      .get()
+    querySnapshot.forEach((doc: any) => {
+      taskNotes.push(doc.data())
+    })
+    return res.status(200).json(taskNotes)
+  } catch (error) {
+    return res.status(500).json(error.message)
+  }
 }
 
 //-----------CREATE NEW----------//
@@ -107,4 +181,12 @@ const deleteNote = async (req: Request, res: Response) => {
   }
 }
 
-export { addNote, editNote, deleteNote }
+export {
+  getWineryNotes,
+  getContainerNotes,
+  getBatchNotes,
+  getTaskNotes,
+  addNote,
+  editNote,
+  deleteNote,
+}

@@ -12,18 +12,22 @@ type Request = {
   params: { wineryId: string }
 }
 
-//-----------GET ALL----------//
-const getAllWineries = async (req: Request, res: Response) => {
+//-----------GET MY----------//
+const getMyWineries = async (req: Request, res: Response) => {
+  if (!req.user)
+    return res
+      .status(403)
+      .json({ general: 'Authentication error, please try again' })
   try {
-    const allWineries: Winery[] = []
+    const myWineries: Winery[] = []
     const querySnapshot = await db
       .collection('wineries')
-      .where('ownerId', '==', req.user?.uid)
+      .where('ownerId', '==', req.user.uid)
       .get()
     querySnapshot.forEach((doc: any) => {
-      allWineries.push(doc.data())
+      myWineries.push(doc.data())
     })
-    return res.status(200).json(allWineries)
+    return res.status(200).json(myWineries)
   } catch (error) {
     return res.status(500).json(error.message)
   }
@@ -117,4 +121,4 @@ const deleteWinery = async (req: Request, res: Response) => {
   }
 }
 
-export { addWinery, getAllWineries, editWinery, deleteWinery }
+export { addWinery, getMyWineries, editWinery, deleteWinery }

@@ -9,7 +9,27 @@ type RequestUser = {
 type Request = {
   body: Batch
   user?: RequestUser
-  params: { batchId: string }
+  params: {
+    batchId: string
+    containerId: string
+  }
+}
+
+//-----------GET BY CONTAINER ID----------//
+const getContainerBatches = async (req: Request, res: Response) => {
+  try {
+    const containerBatches: Batch[] = []
+    const querySnapshot = await db
+      .collection('batches')
+      .where('containerId', '==', req.params.containerId)
+      .get()
+    querySnapshot.forEach((doc: any) => {
+      containerBatches.push(doc.data())
+    })
+    return res.status(200).json(containerBatches)
+  } catch (error) {
+    return res.status(500).json(error.message)
+  }
 }
 
 //-----------CREATE NEW----------//
@@ -137,4 +157,4 @@ const deleteBatch = async (req: Request, res: Response) => {
   }
 }
 
-export { addBatch, editBatch, deleteBatch }
+export { getContainerBatches, addBatch, editBatch, deleteBatch }
