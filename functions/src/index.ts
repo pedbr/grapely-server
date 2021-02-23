@@ -46,6 +46,10 @@ import { firebaseAuth } from './middleware/authMiddleware'
 
 const app = express()
 
+const cors = require('cors')
+
+app.use(cors())
+
 //--------------AUTH ROUTES-------------//
 app.post('/signup', signUpUser)
 app.post('/login', loginUser)
