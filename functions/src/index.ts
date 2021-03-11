@@ -63,7 +63,7 @@ app.get('/user/wineries', firebaseAuth, getUserWithWineries)
 app.get('/winery', firebaseAuth, getMyWineries)
 app.post('/winery/add', firebaseAuth, addWinery)
 app.patch('/winery/edit/:wineryId', editWinery)
-app.delete('/container/delete/:wineryId', deleteWinery)
+app.delete('/winery/delete/:wineryId', deleteWinery)
 
 //--------------CONTAINER ROUTES-------------//
 app.get('/container/winery/:wineryId', getWineryContainers)
