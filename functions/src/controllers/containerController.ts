@@ -11,7 +11,28 @@ type Request = {
   user?: RequestUser
   params: {
     containerId: string
-    wineryId: string
+    currentWineryId: string
+  }
+}
+
+//-----------GET MY----------//
+const getMyContainers = async (req: Request, res: Response) => {
+  if (!req.user)
+    return res
+      .status(403)
+      .json({ general: 'Authentication error, please try again' })
+  try {
+    const myWContainers: Container[] = []
+    const querySnapshot = await db
+      .collection('containers')
+      .where('ownerId', '==', req.user.uid)
+      .get()
+    querySnapshot.forEach((doc: any) => {
+      myWContainers.push(doc.data())
+    })
+    return res.status(200).json(myWContainers)
+  } catch (error) {
+    return res.status(500).json(error.message)
   }
 }
 
@@ -21,7 +42,7 @@ const getWineryContainers = async (req: Request, res: Response) => {
     const wineryContainers: Container[] = []
     const querySnapshot = await db
       .collection('containers')
-      .where('wineryId', '==', req.params.wineryId)
+      .where('currentWineryId', '==', req.params.currentWineryId)
       .get()
     querySnapshot.forEach((doc: any) => {
       wineryContainers.push(doc.data())
@@ -39,7 +60,7 @@ const addContainer = async (req: Request, res: Response) => {
       .status(403)
       .json({ general: 'Authentication error, please try again' })
 
-  const { name, capacity, type, wineryId } = req.body
+  const { name, capacity, type, currentWineryId } = req.body
   try {
     const container = db.collection('containers').doc()
     const containerObject: Container = {
@@ -47,7 +68,7 @@ const addContainer = async (req: Request, res: Response) => {
       name,
       capacity,
       type,
-      wineryId,
+      currentWineryId,
       createdAt: new Date().toISOString(),
     }
 
@@ -67,7 +88,7 @@ const addContainer = async (req: Request, res: Response) => {
 //-----------EDIT----------//
 const editContainer = async (req: Request, res: Response) => {
   const {
-    body: { name, capacity, type, wineryId },
+    body: { name, capacity, type, currentWineryId },
     params: { containerId },
   } = req
 
@@ -80,7 +101,7 @@ const editContainer = async (req: Request, res: Response) => {
       capacity: capacity || currentData.capacity,
       createdAt: currentData.createdAt,
       type: type || currentData.type,
-      wineryId: wineryId || currentData.wineryId,
+      currentWineryId: currentWineryId || currentData.currentWineryId,
     }
 
     await container.set(containerObject).catch((error) => {
@@ -123,4 +144,10 @@ const deleteContainer = async (req: Request, res: Response) => {
   }
 }
 
-export { getWineryContainers, addContainer, editContainer, deleteContainer }
+export {
+  getMyContainers,
+  getWineryContainers,
+  addContainer,
+  editContainer,
+  deleteContainer,
+}

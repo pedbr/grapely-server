@@ -13,6 +13,7 @@ import {
   getUserWithWineries,
 } from './controllers/userController'
 import {
+  getMyContainers,
   getWineryContainers,
   addContainer,
   editContainer,
@@ -66,6 +67,7 @@ app.patch('/winery/edit/:wineryId', editWinery)
 app.delete('/winery/delete/:wineryId', deleteWinery)
 
 //--------------CONTAINER ROUTES-------------//
+app.get('/container', getMyContainers)
 app.get('/container/winery/:wineryId', getWineryContainers)
 app.post('/container/add', firebaseAuth, addContainer)
 app.patch('/container/edit/:containerId', editContainer)

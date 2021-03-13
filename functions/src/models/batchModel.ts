@@ -1,3 +1,4 @@
+import { Container } from './containerModel'
 import { Note } from './noteModel'
 import { Task } from './taskModel'
 
@@ -12,7 +13,8 @@ interface Batch {
   startDate: string
   estimatedEndDate: string
   createdAt: string
-  containerId: string
+  currentContainerId?: string
+  currentContainer?: Container
   endDate?: string
   tasks?: Task[]
   notes?: Note[]

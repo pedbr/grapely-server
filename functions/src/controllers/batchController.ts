@@ -11,7 +11,7 @@ type Request = {
   user?: RequestUser
   params: {
     batchId: string
-    containerId: string
+    currentContainerId: string
   }
 }
 
@@ -21,7 +21,7 @@ const getContainerBatches = async (req: Request, res: Response) => {
     const containerBatches: Batch[] = []
     const querySnapshot = await db
       .collection('batches')
-      .where('containerId', '==', req.params.containerId)
+      .where('currentContainerId', '==', req.params.currentContainerId)
       .get()
     querySnapshot.forEach((doc: any) => {
       containerBatches.push(doc.data())
@@ -49,7 +49,7 @@ const addBatch = async (req: Request, res: Response) => {
     startDate,
     estimatedEndDate,
     endDate,
-    containerId,
+    currentContainerId,
   } = req.body
   try {
     const batch = db.collection('batches').doc()
@@ -64,7 +64,7 @@ const addBatch = async (req: Request, res: Response) => {
       startDate,
       estimatedEndDate,
       endDate,
-      containerId,
+      currentContainerId,
       createdAt: new Date().toISOString(),
     }
 
@@ -94,7 +94,7 @@ const editBatch = async (req: Request, res: Response) => {
       startDate,
       estimatedEndDate,
       endDate,
-      containerId,
+      currentContainerId,
     },
     params: { batchId },
   } = req
@@ -114,7 +114,7 @@ const editBatch = async (req: Request, res: Response) => {
       startDate: startDate || currentData.startDate,
       estimatedEndDate: estimatedEndDate || currentData.estimatedEndDate,
       endDate: endDate || currentData.endDate,
-      containerId: containerId || currentData.containerId,
+      currentContainerId: currentContainerId || currentData.currentContainerId,
     }
 
     await batch.set(batchObject).catch((error) => {
