@@ -15,22 +15,37 @@ type Request = {
   }
 }
 
-//-----------GET MY----------//
+//-----------GET MY CONTAINERS----------//
 const getMyContainers = async (req: Request, res: Response) => {
   if (!req.user)
     return res
       .status(403)
       .json({ general: 'Authentication error, please try again' })
   try {
-    const myWContainers: Container[] = []
+    const myContainers: Container[] = []
     const querySnapshot = await db
       .collection('containers')
       .where('ownerId', '==', req.user.uid)
       .get()
     querySnapshot.forEach((doc: any) => {
-      myWContainers.push(doc.data())
+      myContainers.push(doc.data())
     })
-    return res.status(200).json(myWContainers)
+    return res.status(200).json(myContainers)
+  } catch (error) {
+    return res.status(500).json(error.message)
+  }
+}
+
+//-----------GET CONTAINER BY ID----------//
+const getContainerById = async (req: Request, res: Response) => {
+  if (!req.user)
+    return res
+      .status(403)
+      .json({ general: 'Authentication error, please try again' })
+  try {
+    const containerRef = db.collection('wineries').doc(req.params.containerId)
+    const container = await containerRef.get()
+    return res.status(200).json(container.data())
   } catch (error) {
     return res.status(500).json(error.message)
   }
@@ -69,6 +84,7 @@ const addContainer = async (req: Request, res: Response) => {
       capacity,
       type,
       currentWineryId,
+      ownerId: req.user.uid,
       createdAt: new Date().toISOString(),
     }
 
@@ -100,6 +116,7 @@ const editContainer = async (req: Request, res: Response) => {
       name: name || currentData.name,
       capacity: capacity || currentData.capacity,
       createdAt: currentData.createdAt,
+      ownerId: currentData.ownerId,
       type: type || currentData.type,
       currentWineryId: currentWineryId || currentData.currentWineryId,
     }
@@ -146,6 +163,7 @@ const deleteContainer = async (req: Request, res: Response) => {
 
 export {
   getMyContainers,
+  getContainerById,
   getWineryContainers,
   addContainer,
   editContainer,

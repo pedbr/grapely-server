@@ -19,8 +19,11 @@ import {
   addContainer,
   editContainer,
   deleteContainer,
+  getContainerById,
 } from './controllers/containerController'
 import {
+  getMyBatches,
+  getBatchById,
   getContainerBatches,
   addBatch,
   editBatch,
@@ -69,13 +72,16 @@ app.patch('/winery/edit/:wineryId', editWinery)
 app.delete('/winery/delete/:wineryId', deleteWinery)
 
 //--------------CONTAINER ROUTES-------------//
-app.get('/container', getMyContainers)
+app.get('/container', firebaseAuth, getMyContainers)
+app.get('/container/:containerId', firebaseAuth, getContainerById)
 app.get('/container/winery/:currentWineryId', getWineryContainers)
 app.post('/container/add', firebaseAuth, addContainer)
 app.patch('/container/edit/:containerId', editContainer)
 app.delete('/container/delete/:containerId', deleteContainer)
 
 //--------------BATCH ROUTES-------------//
+app.get('/batch', firebaseAuth, getMyBatches)
+app.get('/batch/:batchId', firebaseAuth, getBatchById)
 app.get('/batch/container/:currentContainerId', getContainerBatches)
 app.post('/batch/add', firebaseAuth, addBatch)
 app.patch('/batch/edit/:batchId', editBatch)

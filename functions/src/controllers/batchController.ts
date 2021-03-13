@@ -15,6 +15,42 @@ type Request = {
   }
 }
 
+//-----------GET MY BATCHES----------//
+const getMyBatches = async (req: Request, res: Response) => {
+  if (!req.user)
+    return res
+      .status(403)
+      .json({ general: 'Authentication error, please try again' })
+  try {
+    const myBatches: Batch[] = []
+    const querySnapshot = await db
+      .collection('batches')
+      .where('ownerId', '==', req.user.uid)
+      .get()
+    querySnapshot.forEach((doc: any) => {
+      myBatches.push(doc.data())
+    })
+    return res.status(200).json(myBatches)
+  } catch (error) {
+    return res.status(500).json(error.message)
+  }
+}
+
+//-----------GET BATCH BY ID----------//
+const getBatchById = async (req: Request, res: Response) => {
+  if (!req.user)
+    return res
+      .status(403)
+      .json({ general: 'Authentication error, please try again' })
+  try {
+    const batchRef = db.collection('wineries').doc(req.params.batchId)
+    const batch = await batchRef.get()
+    return res.status(200).json(batch.data())
+  } catch (error) {
+    return res.status(500).json(error.message)
+  }
+}
+
 //-----------GET BY CONTAINER ID----------//
 const getContainerBatches = async (req: Request, res: Response) => {
   try {
@@ -65,6 +101,7 @@ const addBatch = async (req: Request, res: Response) => {
       estimatedEndDate,
       endDate,
       currentContainerId,
+      ownerId: req.user.uid,
       createdAt: new Date().toISOString(),
     }
 
@@ -107,6 +144,7 @@ const editBatch = async (req: Request, res: Response) => {
       name: name || currentData.name,
       amount: amount || currentData.amount,
       createdAt: currentData.createdAt,
+      ownerId: currentData.ownerId,
       type: type || currentData.type,
       year: year || currentData.year,
       product: product || currentData.product,
@@ -157,4 +195,11 @@ const deleteBatch = async (req: Request, res: Response) => {
   }
 }
 
-export { getContainerBatches, addBatch, editBatch, deleteBatch }
+export {
+  getMyBatches,
+  getBatchById,
+  getContainerBatches,
+  addBatch,
+  editBatch,
+  deleteBatch,
+}

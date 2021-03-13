@@ -13,6 +13,7 @@ interface Batch {
   startDate: string
   estimatedEndDate: string
   createdAt: string
+  ownerId: string
   currentContainerId?: string
   currentContainer?: Container
   endDate?: string

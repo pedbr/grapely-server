@@ -12,6 +12,7 @@ interface Container {
   currentWinery?: Winery
   currentBatch?: Batch
   createdAt: string
+  ownerId: string
   tasks?: Task[]
   notes?: Note[]
 }
