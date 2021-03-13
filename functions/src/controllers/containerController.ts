@@ -43,7 +43,7 @@ const getContainerById = async (req: Request, res: Response) => {
       .status(403)
       .json({ general: 'Authentication error, please try again' })
   try {
-    const containerRef = db.collection('wineries').doc(req.params.containerId)
+    const containerRef = db.collection('containers').doc(req.params.containerId)
     const container = await containerRef.get()
     return res.status(200).json(container.data())
   } catch (error) {

@@ -43,7 +43,7 @@ const getBatchById = async (req: Request, res: Response) => {
       .status(403)
       .json({ general: 'Authentication error, please try again' })
   try {
-    const batchRef = db.collection('wineries').doc(req.params.batchId)
+    const batchRef = db.collection('batches').doc(req.params.batchId)
     const batch = await batchRef.get()
     return res.status(200).json(batch.data())
   } catch (error) {
