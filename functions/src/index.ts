@@ -3,6 +3,7 @@ import * as express from 'express'
 import { signUpUser, loginUser } from './controllers/authController'
 import {
   addWinery,
+  getWineryById,
   getMyWineries,
   editWinery,
   deleteWinery,
@@ -62,19 +63,20 @@ app.get('/user/wineries', firebaseAuth, getUserWithWineries)
 
 //--------------WINERY ROUTES-------------//
 app.get('/winery', firebaseAuth, getMyWineries)
+app.get('/winery/:wineryId', firebaseAuth, getWineryById)
 app.post('/winery/add', firebaseAuth, addWinery)
 app.patch('/winery/edit/:wineryId', editWinery)
 app.delete('/winery/delete/:wineryId', deleteWinery)
 
 //--------------CONTAINER ROUTES-------------//
 app.get('/container', getMyContainers)
-app.get('/container/winery/:wineryId', getWineryContainers)
+app.get('/container/winery/:currentWineryId', getWineryContainers)
 app.post('/container/add', firebaseAuth, addContainer)
 app.patch('/container/edit/:containerId', editContainer)
 app.delete('/container/delete/:containerId', deleteContainer)
 
 //--------------BATCH ROUTES-------------//
-app.get('/batch/container/:containerId', getContainerBatches)
+app.get('/batch/container/:currentContainerId', getContainerBatches)
 app.post('/batch/add', firebaseAuth, addBatch)
 app.patch('/batch/edit/:batchId', editBatch)
 app.delete('/batch/delete/:batchId', deleteBatch)

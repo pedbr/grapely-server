@@ -12,7 +12,7 @@ type Request = {
   params: { wineryId: string }
 }
 
-//-----------GET MY----------//
+//-----------GET MY WINERIES----------//
 const getMyWineries = async (req: Request, res: Response) => {
   if (!req.user)
     return res
@@ -28,6 +28,21 @@ const getMyWineries = async (req: Request, res: Response) => {
       myWineries.push(doc.data())
     })
     return res.status(200).json(myWineries)
+  } catch (error) {
+    return res.status(500).json(error.message)
+  }
+}
+
+//-----------GET WINERY BY ID----------//
+const getWineryById = async (req: Request, res: Response) => {
+  if (!req.user)
+    return res
+      .status(403)
+      .json({ general: 'Authentication error, please try again' })
+  try {
+    const wineryRef = db.collection('wineries').doc(req.params.wineryId)
+    const winery = await wineryRef.get()
+    return res.status(200).json(winery.data())
   } catch (error) {
     return res.status(500).json(error.message)
   }
@@ -121,4 +136,4 @@ const deleteWinery = async (req: Request, res: Response) => {
   }
 }
 
-export { addWinery, getMyWineries, editWinery, deleteWinery }
+export { addWinery, getWineryById, getMyWineries, editWinery, deleteWinery }
