@@ -1,36 +1,48 @@
 import { Response } from 'express'
 import { db } from '../config/firebase'
-
-type WineryType = {
-  id: string
-  name: string
-  location: string
-  ownerId: string
-  createdAt: string
-}
+import { Winery } from '../models/wineryModel'
 
 type RequestUser = {
   uid: string
 }
 
 type Request = {
-  body: WineryType
+  body: Winery
   user?: RequestUser
   params: { wineryId: string }
 }
 
-//-----------GET ALL----------//
-const getAllWineries = async (req: Request, res: Response) => {
+//-----------GET MY WINERIES----------//
+const getMyWineries = async (req: Request, res: Response) => {
+  if (!req.user)
+    return res
+      .status(403)
+      .json({ general: 'Authentication error, please try again' })
   try {
-    const allWineries: WineryType[] = []
+    const myWineries: Winery[] = []
     const querySnapshot = await db
       .collection('wineries')
-      .where('ownerId', '==', req.user?.uid)
+      .where('ownerId', '==', req.user.uid)
       .get()
     querySnapshot.forEach((doc: any) => {
-      allWineries.push(doc.data())
+      myWineries.push(doc.data())
     })
-    return res.status(200).json(allWineries)
+    return res.status(200).json(myWineries)
+  } catch (error) {
+    return res.status(500).json(error.message)
+  }
+}
+
+//-----------GET WINERY BY ID----------//
+const getWineryById = async (req: Request, res: Response) => {
+  if (!req.user)
+    return res
+      .status(403)
+      .json({ general: 'Authentication error, please try again' })
+  try {
+    const wineryRef = db.collection('wineries').doc(req.params.wineryId)
+    const winery = await wineryRef.get()
+    return res.status(200).json(winery.data())
   } catch (error) {
     return res.status(500).json(error.message)
   }
@@ -39,13 +51,17 @@ const getAllWineries = async (req: Request, res: Response) => {
 //-----------CREATE NEW----------//
 const addWinery = async (req: Request, res: Response) => {
   const { name, location } = req.body
+  if (!req.user)
+    return res
+      .status(403)
+      .json({ general: 'Authentication error, please try again' })
   try {
     const winery = db.collection('wineries').doc()
-    const wineryObject = {
+    const wineryObject: Winery = {
       id: winery.id,
       name,
       location,
-      ownerId: req.user?.uid,
+      ownerId: req.user.uid,
       createdAt: new Date().toISOString(),
     }
 
@@ -59,6 +75,7 @@ const addWinery = async (req: Request, res: Response) => {
   } catch (error) {
     res.status(500).json(error.message)
   }
+  return
 }
 
 //-----------EDIT----------//
@@ -119,4 +136,4 @@ const deleteWinery = async (req: Request, res: Response) => {
   }
 }
 
-export { addWinery, getAllWineries, editWinery, deleteWinery }
+export { addWinery, getWineryById, getMyWineries, editWinery, deleteWinery }

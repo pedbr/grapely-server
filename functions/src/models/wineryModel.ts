@@ -1,9 +1,16 @@
-type WineryType = {
+import { Container } from './containerModel'
+import { Note } from './noteModel'
+import { Task } from './taskModel'
+
+interface Winery {
   id: string
-  name: string
   location: string
+  name: string
   ownerId: string
   createdAt: string
+  containers?: Container[]
+  tasks?: Task[]
+  notes?: Note[]
 }
 
-export { WineryType }
+export { Winery }
