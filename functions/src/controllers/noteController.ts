@@ -11,76 +11,37 @@ type Request = {
   user?: RequestUser
   params: {
     noteId: string
-    wineryId: string
-    containerId: string
-    batchId: string
-    taskId: string
+    parentId: string
   }
 }
 
-//-----------GET BY WINERY ID----------//
-const getWineryNotes = async (req: Request, res: Response) => {
+//-----------GET NOTE BY ID----------//
+const getNoteById = async (req: Request, res: Response) => {
+  if (!req.user)
+    return res
+      .status(403)
+      .json({ general: 'Authentication error, please try again' })
   try {
-    const wineryNotes: Note[] = []
-    const querySnapshot = await db
-      .collection('notes')
-      .where('wineryId', '==', req.params.wineryId)
-      .get()
-    querySnapshot.forEach((doc: any) => {
-      wineryNotes.push(doc.data())
-    })
-    return res.status(200).json(wineryNotes)
+    const noteRef = db.collection('notes').doc(req.params.noteId)
+    const note = await noteRef.get()
+    return res.status(200).json(note.data())
   } catch (error) {
     return res.status(500).json(error.message)
   }
 }
 
-//-----------GET BY CONTAINER ID----------//
-const getContainerNotes = async (req: Request, res: Response) => {
+//-----------GET BY PARENT ID----------//
+const getParentNotes = async (req: Request, res: Response) => {
   try {
-    const containerNotes: Note[] = []
+    const parentNotes: Note[] = []
     const querySnapshot = await db
       .collection('notes')
-      .where('containerId', '==', req.params.containerId)
+      .where('parentId', '==', req.params.parentId)
       .get()
     querySnapshot.forEach((doc: any) => {
-      containerNotes.push(doc.data())
+      parentNotes.push(doc.data())
     })
-    return res.status(200).json(containerNotes)
-  } catch (error) {
-    return res.status(500).json(error.message)
-  }
-}
-
-//-----------GET BY BATCH ID----------//
-const getBatchNotes = async (req: Request, res: Response) => {
-  try {
-    const batchNotes: Note[] = []
-    const querySnapshot = await db
-      .collection('notes')
-      .where('batchId', '==', req.params.batchId)
-      .get()
-    querySnapshot.forEach((doc: any) => {
-      batchNotes.push(doc.data())
-    })
-    return res.status(200).json(batchNotes)
-  } catch (error) {
-    return res.status(500).json(error.message)
-  }
-}
-
-//-----------GET BY TASK ID----------//
-const getTaskNotes = async (req: Request, res: Response) => {
-  try {
-    const taskNotes: Note[] = []
-    const querySnapshot = await db
-      .collection('notes')
-      .where('taskId', '==', req.params.taskId)
-      .get()
-    querySnapshot.forEach((doc: any) => {
-      taskNotes.push(doc.data())
-    })
-    return res.status(200).json(taskNotes)
+    return res.status(200).json(parentNotes)
   } catch (error) {
     return res.status(500).json(error.message)
   }
@@ -93,7 +54,7 @@ const addNote = async (req: Request, res: Response) => {
       .status(403)
       .json({ general: 'Authentication error, please try again' })
 
-  const { body, wineryId, containerId, batchId, taskId } = req.body
+  const { body, parentId } = req.body
   try {
     const note = db.collection('notes').doc()
     const noteObject: Note = {
@@ -101,10 +62,7 @@ const addNote = async (req: Request, res: Response) => {
       authorUserId: req.user.uid,
       createdAt: new Date().toISOString(),
       body,
-      wineryId,
-      containerId,
-      batchId,
-      taskId,
+      parentId,
     }
 
     note.set(noteObject)
@@ -135,10 +93,7 @@ const editNote = async (req: Request, res: Response) => {
       authorUserId: currentData.authorUserId,
       createdAt: currentData.createdAt,
       body: body || currentData.body,
-      containerId: currentData.containerId,
-      batchId: currentData.batchId,
-      wineryId: currentData.wineryId,
-      taskId: currentData.taskId,
+      parentId: currentData.parentId,
     }
 
     await note.set(noteObject).catch((error) => {
@@ -182,10 +137,8 @@ const deleteNote = async (req: Request, res: Response) => {
 }
 
 export {
-  getWineryNotes,
-  getContainerNotes,
-  getBatchNotes,
-  getTaskNotes,
+  getNoteById,
+  getParentNotes,
   addNote,
   editNote,
   deleteNote,

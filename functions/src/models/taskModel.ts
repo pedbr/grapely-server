@@ -9,9 +9,7 @@ interface Task {
   status: string
   dueDate: string
   assignedUser?: string
-  wineryId?: string
-  containerId?: string
-  batchId?: string
+  parentId?: string
   notes?: Note[]
 }
 

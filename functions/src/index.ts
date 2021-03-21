@@ -34,15 +34,12 @@ import {
   editTask,
   deleteTask,
   getMyTasks,
-  getWineryTasks,
-  getContainerTasks,
-  getBatchTasks,
+  getTaskById,
+  getTasksByParentId,
 } from './controllers/taskController'
 import {
-  getWineryNotes,
-  getContainerNotes,
-  getBatchNotes,
-  getTaskNotes,
+  getNoteById,
+  getParentNotes,
   addNote,
   editNote,
   deleteNote,
@@ -89,18 +86,15 @@ app.delete('/batch/delete/:batchId', deleteBatch)
 
 //--------------TASK ROUTES-------------//
 app.get('/task', firebaseAuth, getMyTasks)
-app.get('/task/winery/:wineryId', getWineryTasks)
-app.get('/task/container/:containerId', getContainerTasks)
-app.get('/task/batch/:batchId', getBatchTasks)
+app.get('/task/:taskId', firebaseAuth, getTaskById)
+app.get('/task/parent/:parentId', getTasksByParentId)
 app.post('/task/add', firebaseAuth, addTask)
 app.patch('/task/edit/:taskId', editTask)
 app.delete('/task/delete/:taskId', deleteTask)
 
 //--------------NOTE ROUTES-------------//
-app.get('/note/winery/:wineryId', getWineryNotes)
-app.get('/note/container:containerId', getContainerNotes)
-app.get('/note/batch/:batchId', getBatchNotes)
-app.get('/note/task/:taskId', getTaskNotes)
+app.get('/note/:noteId', firebaseAuth, getNoteById)
+app.get('/note/parent/:parentId', firebaseAuth, getParentNotes)
 app.post('/note/add', firebaseAuth, addNote)
 app.patch('/note/edit/:noteId', editNote)
 app.delete('/note/delete/:noteId', deleteNote)

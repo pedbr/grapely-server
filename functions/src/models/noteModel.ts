@@ -3,10 +3,7 @@ interface Note {
   authorUserId: string
   createdAt: string
   body: string
-  wineryId?: string
-  containerId?: string
-  batchId?: string
-  taskId?: string
+  parentId: string
 }
 
 export { Note }

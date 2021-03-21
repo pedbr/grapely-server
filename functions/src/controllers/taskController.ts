@@ -11,9 +11,7 @@ type Request = {
   user?: RequestUser
   params: {
     taskId: string
-    wineryId: string
-    containerId: string
-    batchId: string
+    parentId: string
   }
 }
 
@@ -38,52 +36,33 @@ const getMyTasks = async (req: Request, res: Response) => {
   }
 }
 
-//-----------GET BY WINERY ID----------//
-const getWineryTasks = async (req: Request, res: Response) => {
+//-----------GET TASK BY ID----------//
+const getTaskById = async (req: Request, res: Response) => {
+  if (!req.user)
+    return res
+      .status(403)
+      .json({ general: 'Authentication error, please try again' })
   try {
-    const wineryTasks: Task[] = []
-    const querySnapshot = await db
-      .collection('tasks')
-      .where('wineryId', '==', req.params.wineryId)
-      .get()
-    querySnapshot.forEach((doc: any) => {
-      wineryTasks.push(doc.data())
-    })
-    return res.status(200).json(wineryTasks)
+    const taskRef = db.collection('tasks').doc(req.params.taskId)
+    const task = await taskRef.get()
+    return res.status(200).json(task.data())
   } catch (error) {
     return res.status(500).json(error.message)
   }
 }
 
-//-----------GET BY WINERY ID----------//
-const getContainerTasks = async (req: Request, res: Response) => {
+//-----------GET BY PARENT ID----------//
+const getTasksByParentId = async (req: Request, res: Response) => {
   try {
-    const containerTasks: Task[] = []
+    const parentTasks: Task[] = []
     const querySnapshot = await db
       .collection('tasks')
-      .where('containerId', '==', req.params.containerId)
+      .where('parentId', '==', req.params.parentId)
       .get()
     querySnapshot.forEach((doc: any) => {
-      containerTasks.push(doc.data())
+      parentTasks.push(doc.data())
     })
-    return res.status(200).json(containerTasks)
-  } catch (error) {
-    return res.status(500).json(error.message)
-  }
-}
-
-//-----------GET BY BATCH ID----------//
-const getBatchTasks = async (req: Request, res: Response) => {
-  try {
-    const batchTasks: Task[] = []
-    const querySnapshot = await db
-      .collection('tasks')
-      .where('batchId', '==', req.params.batchId)
-      .get()
-    querySnapshot.forEach((doc: any) => {
-      batchTasks.push(doc.data())
-    })
-    return res.status(200).json(batchTasks)
+    return res.status(200).json(parentTasks)
   } catch (error) {
     return res.status(500).json(error.message)
   }
@@ -101,9 +80,7 @@ const addTask = async (req: Request, res: Response) => {
     description,
     status,
     dueDate,
-    wineryId,
-    containerId,
-    batchId,
+    parentId,
   } = req.body
   try {
     const task = db.collection('tasks').doc()
@@ -115,9 +92,7 @@ const addTask = async (req: Request, res: Response) => {
       description,
       status,
       dueDate,
-      wineryId,
-      containerId,
-      batchId,
+      parentId,
     }
 
     task.set(taskObject)
@@ -141,9 +116,7 @@ const editTask = async (req: Request, res: Response) => {
       description,
       status,
       dueDate,
-      wineryId,
-      containerId,
-      batchId,
+      parentId,
     },
     params: { taskId },
   } = req
@@ -159,9 +132,7 @@ const editTask = async (req: Request, res: Response) => {
       description: description || currentData.description,
       status: status || currentData.status,
       dueDate: dueDate || currentData.dueDate,
-      containerId: containerId || currentData.containerId,
-      batchId: batchId || currentData.batchId,
-      wineryId: wineryId || currentData.wineryId,
+      parentId: parentId || currentData.parentId,
     }
 
     await task.set(taskObject).catch((error) => {
@@ -206,9 +177,8 @@ const deleteTask = async (req: Request, res: Response) => {
 
 export {
   getMyTasks,
-  getWineryTasks,
-  getContainerTasks,
-  getBatchTasks,
+  getTaskById,
+  getTasksByParentId,
   addTask,
   editTask,
   deleteTask,
