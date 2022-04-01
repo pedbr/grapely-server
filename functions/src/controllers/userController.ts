@@ -26,7 +26,7 @@ const getUser = async (req: Request, res: Response) => {
         .status(403)
         .json({ general: 'User not found, please try again' })
     return res.status(200).json(user)
-  } catch (error: any) {
+  } catch (error) {
     return res.status(500).json(error.message)
   }
 }
@@ -66,7 +66,7 @@ const editUser = async (req: Request, res: Response) => {
       message: 'User updated successfully',
       data: userObject,
     })
-  } catch (error: any) {
+  } catch (error) {
     return res.status(500).json(error.message)
   }
 }
@@ -104,7 +104,7 @@ const getUserWithWineries = async (req: Request, res: Response) => {
       wineries: userWineries,
     }
     return res.status(200).json(userObject)
-  } catch (error: any) {
+  } catch (error) {
     return res.status(500).json(error.message)
   }
 }

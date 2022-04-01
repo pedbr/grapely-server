@@ -31,7 +31,7 @@ const getMyTasks = async (req: Request, res: Response) => {
       myTasks.push(doc.data())
     })
     return res.status(200).json(myTasks)
-  } catch (error: any) {
+  } catch (error) {
     return res.status(500).json(error.message)
   }
 }
@@ -46,7 +46,7 @@ const getTaskById = async (req: Request, res: Response) => {
     const taskRef = db.collection('tasks').doc(req.params.taskId)
     const task = await taskRef.get()
     return res.status(200).json(task.data())
-  } catch (error: any) {
+  } catch (error) {
     return res.status(500).json(error.message)
   }
 }
@@ -63,7 +63,7 @@ const getTasksByParentId = async (req: Request, res: Response) => {
       parentTasks.push(doc.data())
     })
     return res.status(200).json(parentTasks)
-  } catch (error: any) {
+  } catch (error) {
     return res.status(500).json(error.message)
   }
 }
@@ -96,7 +96,7 @@ const addTask = async (req: Request, res: Response) => {
       message: 'Task added successfully!',
       data: taskObject,
     })
-  } catch (error: any) {
+  } catch (error) {
     res.status(500).json(error.message)
   }
   return
@@ -135,7 +135,7 @@ const editTask = async (req: Request, res: Response) => {
       message: 'Task updated successfully',
       data: taskObject,
     })
-  } catch (error: any) {
+  } catch (error) {
     return res.status(500).json(error.message)
   }
 }
@@ -158,7 +158,7 @@ const deleteTask = async (req: Request, res: Response) => {
       status: 'success',
       message: 'Task deleted successfully',
     })
-  } catch (error: any) {
+  } catch (error) {
     return res.status(500).json(error.message)
   }
 }

@@ -1,5 +1,6 @@
 import { Response } from 'express'
 import * as firebase from 'firebase'
+import * as admin from 'firebase-admin'
 import { db, firebaseConfig } from '../config/firebase'
 import { User } from '../models/userModel'
 import { isEmpty, isEmail } from '../utils/helpers'
@@ -42,7 +43,7 @@ const signUpUser = async (req: Request, res: Response) => {
     company: req.body.company,
     role: req.body.role,
   }
-  console.log(userCredentials)
+
   const {
     email,
     password,
@@ -77,6 +78,11 @@ const signUpUser = async (req: Request, res: Response) => {
     .createUserWithEmailAndPassword(email, password)
     .then((data) => {
       userId = data?.user?.uid
+
+      if (userId) {
+        admin.auth().setCustomUserClaims(userId, { role: 'default' })
+      }
+
       return data?.user?.getIdToken()
     })
     .then((idToken): any => {

@@ -25,7 +25,7 @@ const getNoteById = async (req: Request, res: Response) => {
     const noteRef = db.collection('notes').doc(req.params.noteId)
     const note = await noteRef.get()
     return res.status(200).json(note.data())
-  } catch (error: any) {
+  } catch (error) {
     return res.status(500).json(error.message)
   }
 }
@@ -42,7 +42,7 @@ const getParentNotes = async (req: Request, res: Response) => {
       parentNotes.push(doc.data())
     })
     return res.status(200).json(parentNotes)
-  } catch (error: any) {
+  } catch (error) {
     return res.status(500).json(error.message)
   }
 }
@@ -72,7 +72,7 @@ const addNote = async (req: Request, res: Response) => {
       message: 'Note added successfully!',
       data: noteObject,
     })
-  } catch (error: any) {
+  } catch (error) {
     res.status(500).json(error.message)
   }
   return
@@ -108,7 +108,7 @@ const editNote = async (req: Request, res: Response) => {
       message: 'Note updated successfully',
       data: noteObject,
     })
-  } catch (error: any) {
+  } catch (error) {
     return res.status(500).json(error.message)
   }
 }
@@ -131,7 +131,7 @@ const deleteNote = async (req: Request, res: Response) => {
       status: 'success',
       message: 'Note deleted successfully',
     })
-  } catch (error: any) {
+  } catch (error) {
     return res.status(500).json(error.message)
   }
 }
