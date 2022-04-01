@@ -12,7 +12,6 @@ interface AuthUser {
   password: string
   confirmPassword: string
   company?: string
-  role?: string
 }
 
 type Request = {
@@ -41,18 +40,10 @@ const signUpUser = async (req: Request, res: Response) => {
     firstName: req.body.firstName,
     lastName: req.body.lastName,
     company: req.body.company,
-    role: req.body.role,
   }
 
-  const {
-    email,
-    password,
-    confirmPassword,
-    firstName,
-    lastName,
-    company,
-    role,
-  } = userCredentials
+  const { email, password, confirmPassword, firstName, lastName, company } =
+    userCredentials
   //-----------VALIDATION-------------//
   let errors: Errors = {}
 
@@ -99,7 +90,7 @@ const signUpUser = async (req: Request, res: Response) => {
         createdAt: new Date().toISOString(),
         userId,
         company,
-        role,
+        role: 'default',
       }
       return db.doc(`/users/${userId}`).set(newUser)
     })
