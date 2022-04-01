@@ -31,7 +31,7 @@ const getMyContainers = async (req: Request, res: Response) => {
       myContainers.push(doc.data())
     })
     return res.status(200).json(myContainers)
-  } catch (error) {
+  } catch (error: any) {
     return res.status(500).json(error.message)
   }
 }
@@ -46,7 +46,7 @@ const getContainerById = async (req: Request, res: Response) => {
     const containerRef = db.collection('containers').doc(req.params.containerId)
     const container = await containerRef.get()
     return res.status(200).json(container.data())
-  } catch (error) {
+  } catch (error: any) {
     return res.status(500).json(error.message)
   }
 }
@@ -63,7 +63,7 @@ const getWineryContainers = async (req: Request, res: Response) => {
       wineryContainers.push(doc.data())
     })
     return res.status(200).json(wineryContainers)
-  } catch (error) {
+  } catch (error: any) {
     return res.status(500).json(error.message)
   }
 }
@@ -95,7 +95,7 @@ const addContainer = async (req: Request, res: Response) => {
       message: 'Container added successfully!',
       data: containerObject,
     })
-  } catch (error) {
+  } catch (error: any) {
     res.status(500).json(error.message)
   }
   return
@@ -133,7 +133,7 @@ const editContainer = async (req: Request, res: Response) => {
       message: 'Container updated successfully',
       data: containerObject,
     })
-  } catch (error) {
+  } catch (error: any) {
     return res.status(500).json(error.message)
   }
 }
@@ -156,7 +156,7 @@ const deleteContainer = async (req: Request, res: Response) => {
       status: 'success',
       message: 'Container deleted successfully',
     })
-  } catch (error) {
+  } catch (error: any) {
     return res.status(500).json(error.message)
   }
 }

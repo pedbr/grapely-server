@@ -28,7 +28,7 @@ const getMyWineries = async (req: Request, res: Response) => {
       myWineries.push(doc.data())
     })
     return res.status(200).json(myWineries)
-  } catch (error) {
+  } catch (error: any) {
     return res.status(500).json(error.message)
   }
 }
@@ -43,7 +43,7 @@ const getWineryById = async (req: Request, res: Response) => {
     const wineryRef = db.collection('wineries').doc(req.params.wineryId)
     const winery = await wineryRef.get()
     return res.status(200).json(winery.data())
-  } catch (error) {
+  } catch (error: any) {
     return res.status(500).json(error.message)
   }
 }
@@ -72,7 +72,7 @@ const addWinery = async (req: Request, res: Response) => {
       message: 'Winery added successfully!',
       data: wineryObject,
     })
-  } catch (error) {
+  } catch (error: any) {
     res.status(500).json(error.message)
   }
   return
@@ -108,7 +108,7 @@ const editWinery = async (req: Request, res: Response) => {
       message: 'Winery updated successfully',
       data: wineryObject,
     })
-  } catch (error) {
+  } catch (error: any) {
     return res.status(500).json(error.message)
   }
 }
@@ -131,7 +131,7 @@ const deleteWinery = async (req: Request, res: Response) => {
       status: 'success',
       message: 'Winery deleted successfully',
     })
-  } catch (error) {
+  } catch (error: any) {
     return res.status(500).json(error.message)
   }
 }

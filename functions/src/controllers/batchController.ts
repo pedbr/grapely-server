@@ -31,7 +31,7 @@ const getMyBatches = async (req: Request, res: Response) => {
       myBatches.push(doc.data())
     })
     return res.status(200).json(myBatches)
-  } catch (error) {
+  } catch (error: any) {
     return res.status(500).json(error.message)
   }
 }
@@ -46,7 +46,7 @@ const getBatchById = async (req: Request, res: Response) => {
     const batchRef = db.collection('batches').doc(req.params.batchId)
     const batch = await batchRef.get()
     return res.status(200).json(batch.data())
-  } catch (error) {
+  } catch (error: any) {
     return res.status(500).json(error.message)
   }
 }
@@ -63,7 +63,7 @@ const getContainerBatches = async (req: Request, res: Response) => {
       containerBatches.push(doc.data())
     })
     return res.status(200).json(containerBatches)
-  } catch (error) {
+  } catch (error: any) {
     return res.status(500).json(error.message)
   }
 }
@@ -112,7 +112,7 @@ const addBatch = async (req: Request, res: Response) => {
       message: 'Batch added successfully!',
       data: batchObject,
     })
-  } catch (error) {
+  } catch (error: any) {
     res.status(500).json(error.message)
   }
   return
@@ -167,7 +167,7 @@ const editBatch = async (req: Request, res: Response) => {
       message: 'Batch updated successfully',
       data: batchObject,
     })
-  } catch (error) {
+  } catch (error: any) {
     return res.status(500).json(error.message)
   }
 }
@@ -190,7 +190,7 @@ const deleteBatch = async (req: Request, res: Response) => {
       status: 'success',
       message: 'Batch deleted successfully',
     })
-  } catch (error) {
+  } catch (error: any) {
     return res.status(500).json(error.message)
   }
 }
