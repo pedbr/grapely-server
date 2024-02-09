@@ -17,37 +17,28 @@ type Request = {
 
 //-----------GET MY----------//
 const getMyTasks = async (req: Request, res: Response) => {
-  if (!req.user)
-    return res
-      .status(403)
-      .json({ general: 'Authentication error, please try again' })
+  if (!req.user) return res.status(403).json({ general: 'Authentication error, please try again' })
   try {
     const myTasks: Task[] = []
-    const querySnapshot = await db
-      .collection('tasks')
-      .where('authorUserId', '==', req.user?.uid)
-      .get()
+    const querySnapshot = await db.collection('tasks').where('authorUserId', '==', req.user?.uid).get()
     querySnapshot.forEach((doc: any) => {
       myTasks.push(doc.data())
     })
     return res.status(200).json(myTasks)
   } catch (error) {
-    return res.status(500).json(error.message)
+    return res.status(500).json((error as Error).message)
   }
 }
 
 //-----------GET TASK BY ID----------//
 const getTaskById = async (req: Request, res: Response) => {
-  if (!req.user)
-    return res
-      .status(403)
-      .json({ general: 'Authentication error, please try again' })
+  if (!req.user) return res.status(403).json({ general: 'Authentication error, please try again' })
   try {
     const taskRef = db.collection('tasks').doc(req.params.taskId)
     const task = await taskRef.get()
     return res.status(200).json(task.data())
   } catch (error) {
-    return res.status(500).json(error.message)
+    return res.status(500).json((error as Error).message)
   }
 }
 
@@ -55,33 +46,21 @@ const getTaskById = async (req: Request, res: Response) => {
 const getTasksByParentId = async (req: Request, res: Response) => {
   try {
     const parentTasks: Task[] = []
-    const querySnapshot = await db
-      .collection('tasks')
-      .where('parentId', '==', req.params.parentId)
-      .get()
+    const querySnapshot = await db.collection('tasks').where('parentId', '==', req.params.parentId).get()
     querySnapshot.forEach((doc: any) => {
       parentTasks.push(doc.data())
     })
     return res.status(200).json(parentTasks)
   } catch (error) {
-    return res.status(500).json(error.message)
+    return res.status(500).json((error as Error).message)
   }
 }
 
 //-----------CREATE NEW----------//
 const addTask = async (req: Request, res: Response) => {
-  if (!req.user)
-    return res
-      .status(403)
-      .json({ general: 'Authentication error, please try again' })
+  if (!req.user) return res.status(403).json({ general: 'Authentication error, please try again' })
 
-  const {
-    title,
-    description,
-    status,
-    dueDate,
-    parentId,
-  } = req.body
+  const { title, description, status, dueDate, parentId } = req.body
   try {
     const task = db.collection('tasks').doc()
     const taskObject: Task = {
@@ -103,7 +82,7 @@ const addTask = async (req: Request, res: Response) => {
       data: taskObject,
     })
   } catch (error) {
-    res.status(500).json(error.message)
+    res.status(500).json((error as Error).message)
   }
   return
 }
@@ -111,13 +90,7 @@ const addTask = async (req: Request, res: Response) => {
 //-----------EDIT----------//
 const editTask = async (req: Request, res: Response) => {
   const {
-    body: {
-      title,
-      description,
-      status,
-      dueDate,
-      parentId,
-    },
+    body: { title, description, status, dueDate, parentId },
     params: { taskId },
   } = req
 
@@ -135,7 +108,7 @@ const editTask = async (req: Request, res: Response) => {
       parentId: parentId || currentData.parentId,
     }
 
-    await task.set(taskObject).catch((error) => {
+    await task.set(taskObject).catch(error => {
       return res.status(400).json({
         status: 'error',
         message: error.message,
@@ -148,7 +121,7 @@ const editTask = async (req: Request, res: Response) => {
       data: taskObject,
     })
   } catch (error) {
-    return res.status(500).json(error.message)
+    return res.status(500).json((error as Error).message)
   }
 }
 
@@ -159,7 +132,7 @@ const deleteTask = async (req: Request, res: Response) => {
   try {
     const task = db.collection('tasks').doc(taskId)
 
-    await task.delete().catch((error) => {
+    await task.delete().catch(error => {
       return res.status(400).json({
         status: 'error',
         message: error.message,
@@ -171,15 +144,8 @@ const deleteTask = async (req: Request, res: Response) => {
       message: 'Task deleted successfully',
     })
   } catch (error) {
-    return res.status(500).json(error.message)
+    return res.status(500).json((error as Error).message)
   }
 }
 
-export {
-  getMyTasks,
-  getTaskById,
-  getTasksByParentId,
-  addTask,
-  editTask,
-  deleteTask,
-}
+export { getMyTasks, getTaskById, getTasksByParentId, addTask, editTask, deleteTask }

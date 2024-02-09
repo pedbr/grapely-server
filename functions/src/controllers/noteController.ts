@@ -17,16 +17,13 @@ type Request = {
 
 //-----------GET NOTE BY ID----------//
 const getNoteById = async (req: Request, res: Response) => {
-  if (!req.user)
-    return res
-      .status(403)
-      .json({ general: 'Authentication error, please try again' })
+  if (!req.user) return res.status(403).json({ general: 'Authentication error, please try again' })
   try {
     const noteRef = db.collection('notes').doc(req.params.noteId)
     const note = await noteRef.get()
     return res.status(200).json(note.data())
   } catch (error) {
-    return res.status(500).json(error.message)
+    return res.status(500).json((error as Error).message)
   }
 }
 
@@ -34,25 +31,19 @@ const getNoteById = async (req: Request, res: Response) => {
 const getParentNotes = async (req: Request, res: Response) => {
   try {
     const parentNotes: Note[] = []
-    const querySnapshot = await db
-      .collection('notes')
-      .where('parentId', '==', req.params.parentId)
-      .get()
+    const querySnapshot = await db.collection('notes').where('parentId', '==', req.params.parentId).get()
     querySnapshot.forEach((doc: any) => {
       parentNotes.push(doc.data())
     })
     return res.status(200).json(parentNotes)
   } catch (error) {
-    return res.status(500).json(error.message)
+    return res.status(500).json((error as Error).message)
   }
 }
 
 //-----------CREATE NEW----------//
 const addNote = async (req: Request, res: Response) => {
-  if (!req.user)
-    return res
-      .status(403)
-      .json({ general: 'Authentication error, please try again' })
+  if (!req.user) return res.status(403).json({ general: 'Authentication error, please try again' })
 
   const { body, parentId } = req.body
   try {
@@ -73,7 +64,7 @@ const addNote = async (req: Request, res: Response) => {
       data: noteObject,
     })
   } catch (error) {
-    res.status(500).json(error.message)
+    res.status(500).json((error as Error).message)
   }
   return
 }
@@ -96,7 +87,7 @@ const editNote = async (req: Request, res: Response) => {
       parentId: currentData.parentId,
     }
 
-    await note.set(noteObject).catch((error) => {
+    await note.set(noteObject).catch(error => {
       return res.status(400).json({
         status: 'error',
         message: error.message,
@@ -109,7 +100,7 @@ const editNote = async (req: Request, res: Response) => {
       data: noteObject,
     })
   } catch (error) {
-    return res.status(500).json(error.message)
+    return res.status(500).json((error as Error).message)
   }
 }
 
@@ -120,7 +111,7 @@ const deleteNote = async (req: Request, res: Response) => {
   try {
     const note = db.collection('notes').doc(noteId)
 
-    await note.delete().catch((error) => {
+    await note.delete().catch(error => {
       return res.status(400).json({
         status: 'error',
         message: error.message,
@@ -132,14 +123,8 @@ const deleteNote = async (req: Request, res: Response) => {
       message: 'Note deleted successfully',
     })
   } catch (error) {
-    return res.status(500).json(error.message)
+    return res.status(500).json((error as Error).message)
   }
 }
 
-export {
-  getNoteById,
-  getParentNotes,
-  addNote,
-  editNote,
-  deleteNote,
-}
+export { getNoteById, getParentNotes, addNote, editNote, deleteNote }
