@@ -17,37 +17,28 @@ type Request = {
 
 //-----------GET MY CONTAINERS----------//
 const getMyContainers = async (req: Request, res: Response) => {
-  if (!req.user)
-    return res
-      .status(403)
-      .json({ general: 'Authentication error, please try again' })
+  if (!req.user) return res.status(403).json({ general: 'Authentication error, please try again' })
   try {
     const myContainers: Container[] = []
-    const querySnapshot = await db
-      .collection('containers')
-      .where('ownerId', '==', req.user.uid)
-      .get()
+    const querySnapshot = await db.collection('containers').where('ownerId', '==', req.user.uid).get()
     querySnapshot.forEach((doc: any) => {
       myContainers.push(doc.data())
     })
     return res.status(200).json(myContainers)
   } catch (error) {
-    return res.status(500).json(error.message)
+    return res.status(500).json((error as Error).message)
   }
 }
 
 //-----------GET CONTAINER BY ID----------//
 const getContainerById = async (req: Request, res: Response) => {
-  if (!req.user)
-    return res
-      .status(403)
-      .json({ general: 'Authentication error, please try again' })
+  if (!req.user) return res.status(403).json({ general: 'Authentication error, please try again' })
   try {
     const containerRef = db.collection('containers').doc(req.params.containerId)
     const container = await containerRef.get()
     return res.status(200).json(container.data())
   } catch (error) {
-    return res.status(500).json(error.message)
+    return res.status(500).json((error as Error).message)
   }
 }
 
@@ -64,16 +55,13 @@ const getWineryContainers = async (req: Request, res: Response) => {
     })
     return res.status(200).json(wineryContainers)
   } catch (error) {
-    return res.status(500).json(error.message)
+    return res.status(500).json((error as Error).message)
   }
 }
 
 //-----------CREATE NEW----------//
 const addContainer = async (req: Request, res: Response) => {
-  if (!req.user)
-    return res
-      .status(403)
-      .json({ general: 'Authentication error, please try again' })
+  if (!req.user) return res.status(403).json({ general: 'Authentication error, please try again' })
 
   const { name, capacity, type, currentWineryId } = req.body
   try {
@@ -96,7 +84,7 @@ const addContainer = async (req: Request, res: Response) => {
       data: containerObject,
     })
   } catch (error) {
-    res.status(500).json(error.message)
+    res.status(500).json((error as Error).message)
   }
   return
 }
@@ -121,7 +109,7 @@ const editContainer = async (req: Request, res: Response) => {
       currentWineryId: currentWineryId || currentData.currentWineryId,
     }
 
-    await container.set(containerObject).catch((error) => {
+    await container.set(containerObject).catch(error => {
       return res.status(400).json({
         status: 'error',
         message: error.message,
@@ -134,7 +122,7 @@ const editContainer = async (req: Request, res: Response) => {
       data: containerObject,
     })
   } catch (error) {
-    return res.status(500).json(error.message)
+    return res.status(500).json((error as Error).message)
   }
 }
 
@@ -145,7 +133,7 @@ const deleteContainer = async (req: Request, res: Response) => {
   try {
     const container = db.collection('containers').doc(containerId)
 
-    await container.delete().catch((error) => {
+    await container.delete().catch(error => {
       return res.status(400).json({
         status: 'error',
         message: error.message,
@@ -157,15 +145,8 @@ const deleteContainer = async (req: Request, res: Response) => {
       message: 'Container deleted successfully',
     })
   } catch (error) {
-    return res.status(500).json(error.message)
+    return res.status(500).json((error as Error).message)
   }
 }
 
-export {
-  getMyContainers,
-  getContainerById,
-  getWineryContainers,
-  addContainer,
-  editContainer,
-  deleteContainer,
-}
+export { getMyContainers, getContainerById, getWineryContainers, addContainer, editContainer, deleteContainer }

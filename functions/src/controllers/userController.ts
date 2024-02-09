@@ -14,20 +14,14 @@ type Request = {
 
 //================GET USER================//
 const getUser = async (req: Request, res: Response) => {
-  if (!req.user)
-    return res
-      .status(403)
-      .json({ general: 'Authentication error, please try again' })
+  if (!req.user) return res.status(403).json({ general: 'Authentication error, please try again' })
 
   try {
     const user = (await db.doc(`users/${req.user.uid}`).get()).data()
-    if (!user)
-      return res
-        .status(403)
-        .json({ general: 'User not found, please try again' })
+    if (!user) return res.status(403).json({ general: 'User not found, please try again' })
     return res.status(200).json(user)
   } catch (error) {
-    return res.status(500).json(error.message)
+    return res.status(500).json((error as Error).message)
   }
 }
 
@@ -36,10 +30,7 @@ const editUser = async (req: Request, res: Response) => {
   const {
     body: { firstName, lastName, company, role },
   } = req
-  if (!req.user)
-    return res
-      .status(403)
-      .json({ general: 'Authentication error, please try again' })
+  if (!req.user) return res.status(403).json({ general: 'Authentication error, please try again' })
 
   try {
     const user = db.collection('users').doc(req.user.uid)
@@ -54,7 +45,7 @@ const editUser = async (req: Request, res: Response) => {
       role: role || currentData.role,
     }
 
-    await user.set(userObject).catch((error) => {
+    await user.set(userObject).catch(error => {
       return res.status(400).json({
         status: 'error',
         message: error.message,
@@ -67,32 +58,23 @@ const editUser = async (req: Request, res: Response) => {
       data: userObject,
     })
   } catch (error) {
-    return res.status(500).json(error.message)
+    return res.status(500).json((error as Error).message)
   }
 }
 
 //=============GET USER W/ WINERIES===============//
 const getUserWithWineries = async (req: Request, res: Response) => {
-  if (!req.user)
-    return res
-      .status(403)
-      .json({ general: 'Authentication error, please try again' })
+  if (!req.user) return res.status(403).json({ general: 'Authentication error, please try again' })
 
   try {
     let userWineries: Winery[] = []
-    const querySnapshot = await db
-      .collection('wineries')
-      .where('ownerId', '==', req.user.uid)
-      .get()
+    const querySnapshot = await db.collection('wineries').where('ownerId', '==', req.user.uid).get()
     querySnapshot.forEach((doc: any) => {
       userWineries.push(doc.data())
     })
     const user = await (await db.doc(`users/${req.user?.uid}`).get()).data()
 
-    if (!user)
-      return res
-        .status(403)
-        .json({ general: 'User not found, please try again' })
+    if (!user) return res.status(403).json({ general: 'User not found, please try again' })
 
     const { userId, firstName, lastName, email, createdAt } = user
     const userObject: User = {
@@ -105,7 +87,7 @@ const getUserWithWineries = async (req: Request, res: Response) => {
     }
     return res.status(200).json(userObject)
   } catch (error) {
-    return res.status(500).json(error.message)
+    return res.status(500).json((error as Error).message)
   }
 }
 

@@ -14,47 +14,35 @@ type Request = {
 
 //-----------GET MY WINERIES----------//
 const getMyWineries = async (req: Request, res: Response) => {
-  if (!req.user)
-    return res
-      .status(403)
-      .json({ general: 'Authentication error, please try again' })
+  if (!req.user) return res.status(403).json({ general: 'Authentication error, please try again' })
   try {
     const myWineries: Winery[] = []
-    const querySnapshot = await db
-      .collection('wineries')
-      .where('ownerId', '==', req.user.uid)
-      .get()
+    const querySnapshot = await db.collection('wineries').where('ownerId', '==', req.user.uid).get()
     querySnapshot.forEach((doc: any) => {
       myWineries.push(doc.data())
     })
     return res.status(200).json(myWineries)
   } catch (error) {
-    return res.status(500).json(error.message)
+    return res.status(500).json((error as Error).message)
   }
 }
 
 //-----------GET WINERY BY ID----------//
 const getWineryById = async (req: Request, res: Response) => {
-  if (!req.user)
-    return res
-      .status(403)
-      .json({ general: 'Authentication error, please try again' })
+  if (!req.user) return res.status(403).json({ general: 'Authentication error, please try again' })
   try {
     const wineryRef = db.collection('wineries').doc(req.params.wineryId)
     const winery = await wineryRef.get()
     return res.status(200).json(winery.data())
   } catch (error) {
-    return res.status(500).json(error.message)
+    return res.status(500).json((error as Error).message)
   }
 }
 
 //-----------CREATE NEW----------//
 const addWinery = async (req: Request, res: Response) => {
   const { name, location } = req.body
-  if (!req.user)
-    return res
-      .status(403)
-      .json({ general: 'Authentication error, please try again' })
+  if (!req.user) return res.status(403).json({ general: 'Authentication error, please try again' })
   try {
     const winery = db.collection('wineries').doc()
     const wineryObject: Winery = {
@@ -73,7 +61,7 @@ const addWinery = async (req: Request, res: Response) => {
       data: wineryObject,
     })
   } catch (error) {
-    res.status(500).json(error.message)
+    res.status(500).json((error as Error).message)
   }
   return
 }
@@ -96,7 +84,7 @@ const editWinery = async (req: Request, res: Response) => {
       ownerId: ownerId || currentData.ownerId,
     }
 
-    await winery.set(wineryObject).catch((error) => {
+    await winery.set(wineryObject).catch(error => {
       return res.status(400).json({
         status: 'error',
         message: error.message,
@@ -109,7 +97,7 @@ const editWinery = async (req: Request, res: Response) => {
       data: wineryObject,
     })
   } catch (error) {
-    return res.status(500).json(error.message)
+    return res.status(500).json((error as Error).message)
   }
 }
 
@@ -120,7 +108,7 @@ const deleteWinery = async (req: Request, res: Response) => {
   try {
     const winery = db.collection('wineries').doc(wineryId)
 
-    await winery.delete().catch((error) => {
+    await winery.delete().catch(error => {
       return res.status(400).json({
         status: 'error',
         message: error.message,
@@ -132,7 +120,7 @@ const deleteWinery = async (req: Request, res: Response) => {
       message: 'Winery deleted successfully',
     })
   } catch (error) {
-    return res.status(500).json(error.message)
+    return res.status(500).json((error as Error).message)
   }
 }
 

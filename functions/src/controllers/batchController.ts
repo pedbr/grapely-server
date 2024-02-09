@@ -17,37 +17,28 @@ type Request = {
 
 //-----------GET MY BATCHES----------//
 const getMyBatches = async (req: Request, res: Response) => {
-  if (!req.user)
-    return res
-      .status(403)
-      .json({ general: 'Authentication error, please try again' })
+  if (!req.user) return res.status(403).json({ general: 'Authentication error, please try again' })
   try {
     const myBatches: Batch[] = []
-    const querySnapshot = await db
-      .collection('batches')
-      .where('ownerId', '==', req.user.uid)
-      .get()
+    const querySnapshot = await db.collection('batches').where('ownerId', '==', req.user.uid).get()
     querySnapshot.forEach((doc: any) => {
       myBatches.push(doc.data())
     })
     return res.status(200).json(myBatches)
   } catch (error) {
-    return res.status(500).json(error.message)
+    return res.status(500).json((error as Error).message)
   }
 }
 
 //-----------GET BATCH BY ID----------//
 const getBatchById = async (req: Request, res: Response) => {
-  if (!req.user)
-    return res
-      .status(403)
-      .json({ general: 'Authentication error, please try again' })
+  if (!req.user) return res.status(403).json({ general: 'Authentication error, please try again' })
   try {
     const batchRef = db.collection('batches').doc(req.params.batchId)
     const batch = await batchRef.get()
     return res.status(200).json(batch.data())
   } catch (error) {
-    return res.status(500).json(error.message)
+    return res.status(500).json((error as Error).message)
   }
 }
 
@@ -64,16 +55,13 @@ const getContainerBatches = async (req: Request, res: Response) => {
     })
     return res.status(200).json(containerBatches)
   } catch (error) {
-    return res.status(500).json(error.message)
+    return res.status(500).json((error as Error).message)
   }
 }
 
 //-----------CREATE NEW----------//
 const addBatch = async (req: Request, res: Response) => {
-  if (!req.user)
-    return res
-      .status(403)
-      .json({ general: 'Authentication error, please try again' })
+  if (!req.user) return res.status(403).json({ general: 'Authentication error, please try again' })
 
   const {
     name,
@@ -113,7 +101,7 @@ const addBatch = async (req: Request, res: Response) => {
       data: batchObject,
     })
   } catch (error) {
-    res.status(500).json(error.message)
+    res.status(500).json((error as Error).message)
   }
   return
 }
@@ -155,7 +143,7 @@ const editBatch = async (req: Request, res: Response) => {
       currentContainerId: currentContainerId || currentData.currentContainerId,
     }
 
-    await batch.set(batchObject).catch((error) => {
+    await batch.set(batchObject).catch(error => {
       return res.status(400).json({
         status: 'error',
         message: error.message,
@@ -168,7 +156,7 @@ const editBatch = async (req: Request, res: Response) => {
       data: batchObject,
     })
   } catch (error) {
-    return res.status(500).json(error.message)
+    return res.status(500).json((error as Error).message)
   }
 }
 
@@ -179,7 +167,7 @@ const deleteBatch = async (req: Request, res: Response) => {
   try {
     const batch = db.collection('batches').doc(batchId)
 
-    await batch.delete().catch((error) => {
+    await batch.delete().catch(error => {
       return res.status(400).json({
         status: 'error',
         message: error.message,
@@ -191,15 +179,8 @@ const deleteBatch = async (req: Request, res: Response) => {
       message: 'Batch deleted successfully',
     })
   } catch (error) {
-    return res.status(500).json(error.message)
+    return res.status(500).json((error as Error).message)
   }
 }
 
-export {
-  getMyBatches,
-  getBatchById,
-  getContainerBatches,
-  addBatch,
-  editBatch,
-  deleteBatch,
-}
+export { getMyBatches, getBatchById, getContainerBatches, addBatch, editBatch, deleteBatch }
